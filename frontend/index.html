@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reporte de Incapacidades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+      :root {
+        /* Paleta de colores genérica y moderna */
+        --primary: #2563eb;       /* Azul estándar */
+        --primary-hover: #1d4ed8; /* Azul más oscuro */
+        --accent-color: #3b82f6;  /* Azul claro para detalles */
+        --bg-body: #f3f4f6;       /* Gris muy claro para el fondo de la página */
+        --bg-card: #ffffff;       /* Blanco para el formulario */
+        --text-dark: #1f2937;     /* Gris oscuro para textos principales */
+        --text-muted: #6b7280;    /* Gris medio para textos secundarios */
+        --border-color: #d1d5db;  /* Gris claro para bordes */
+        --input-bg: #f9fafb;      /* Fondo sutil para inputs */
+        --error-color: #ef4444;   /* Rojo para errores */
+        --radius: 12px;
+      }
+
+      body {
+        margin: 0; padding: 0; background-color: var(--bg-body);
+        font-family: "Inter", sans-serif; color: var(--text-dark); line-height: 1.5;
+      }
+
+      .card-container {
+        background-color: var(--bg-card); border-radius: var(--radius); overflow: hidden;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); max-width: 800px; margin: 40px auto;
+      }
+
+      .header-container {
+        padding: 35px 30px 25px 30px;
+        border-bottom: 3px solid var(--accent-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: #ffffff;
+      }
+
+      .generic-icon {
+        width: 50px;
+        height: 50px;
+        color: var(--primary);
+        margin-bottom: 15px;
+      }
+
+      .header-title {
+        color: var(--text-dark); font-weight: 800; text-transform: uppercase;
+        font-size: 24px; margin: 0; letter-spacing: 0.5px;
+      }
+
+      .header-subtitle {
+        color: var(--text-muted); font-size: 14px; margin: 8px 0 0 0;
+      }
+
+      .container-padding { padding: 30px 40px 40px 40px; }
+
+      .section-title {
+        color: var(--text-dark); font-size: 16px; font-weight: 700;
+        text-transform: uppercase; margin-bottom: 20px; display: flex;
+        align-items: center; gap: 10px;
+      }
+
+      .section-title::before {
+        content: ""; display: block; width: 4px; height: 20px;
+        background-color: var(--primary);
+        border-radius: 2px;
+      }
+
+      .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+      
+      .form-group { margin-bottom: 15px; }
+      
+      label {
+        display: block; font-weight: 600; color: var(--text-dark);
+        margin-bottom: 6px; font-size: 13px;
+      }
+      
+      .required { color: var(--error-color); font-weight: bold; }
+      
+      input[type="text"], select {
+        width: 100%; height: 46px; padding: 0 16px; border: 1px solid var(--border-color);
+        border-radius: 8px; font-size: 14px; background-color: var(--input-bg); font-family: "Inter", sans-serif;
+        transition: all 0.2s ease;
+      }
+
+      input[type="text"]:focus, select:focus {
+        outline: none; border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        background-color: #ffffff;
+      }
+
+      input[type="file"] {
+        width: 100%; padding: 12px; background-color: var(--input-bg);
+        border: 1px dashed var(--border-color); border-radius: 8px;
+        font-size: 13px; cursor: pointer; color: var(--text-muted);
+        transition: all 0.2s ease;
+      }
+      
+      input[type="file"]:hover {
+        border-color: var(--primary);
+        background-color: #ffffff;
+      }
+
+      .btn-submit {
+        background-color: var(--primary);
+        color: white; border: none; padding: 16px 30px; font-size: 16px;
+        font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%;
+        margin-top: 25px; transition: background-color 0.2s ease;
+      }
+
+      .btn-submit:hover:not(:disabled) {
+        background-color: var(--primary-hover);
+      }
+
+      .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+      /* Alertas de mensajes */
+      .alert {
+        display: none; text-align: center; padding: 15px; border-radius: 8px; 
+        margin-top: 20px; font-weight: 500; font-size: 14px;
+      }
+      .alert-success {
+        background-color: #d1fae5; color: #065f46; border: 1px solid #34d399;
+      }
+      .alert-error {
+        background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;
+      }
+
+      @media (max-width: 768px) {
+        .two-col-grid { grid-template-columns: 1fr; gap: 15px; }
+        .container-padding { padding: 25px 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <form id="formularioIncapacidades" enctype="multipart/form-data">
+      
+      <input type="hidden" name="identificador_incapacidad" id="identificador_incapacidad" />
+
+      <div class="card-container">
+        
+        <div class="header-container">
+          <svg class="generic-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          
+          <h1 class="header-title">Registro de Incapacidades</h1>
+          <p class="header-subtitle">
+            Diligencia el formulario y adjunta el soporte médico <strong>únicamente en formato PDF</strong>.
+          </p>
+        </div>
+
+        <div class="container-padding">
+          <div class="form-section">
+            <div class="section-title">1. Datos del Colaborador</div>
+            <div class="two-col-grid">
+              <div class="form-group">
+                <label>Número de Cédula <span class="required">*</span></label>
+                <input type="text" id="cedula" name="cedula" placeholder="Sin puntos ni comas" required />
+              </div>
+              <div class="form-group">
+                <label>Nombre Completo <span class="required">*</span></label>
+                <input type="text" id="nombre_completo" name="nombre_completo" placeholder="Nombres y Apellidos" required oninput="this.value = this.value.toUpperCase()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section" style="margin-top: 30px;">
+            <div class="section-title">2. Detalles de la Incapacidad</div>
+            <div class="two-col-grid">
+              <div class="form-group">
+                <label>Número de Incapacidad</label>
+                <input type="text" id="numero_incapacidad" name="numero_incapacidad" placeholder="(Opcional)" oninput="this.value = this.value.toUpperCase()" />
+              </div>
+              
+              <div class="form-group">
+                <label>EPS <span class="required">*</span></label>
+                <select name="eps" required>
+                  <option value="" disabled selected>Seleccionar...</option>
+                  <option value="SURA">Sura</option>
+                  <option value="SANITAS">Sanitas</option>
+                  <option value="NUEVA_EPS">Nueva EPS</option>
+                  <option value="SALUD_TOTAL">Salud Total</option>
+                  <option value="COMPENSAR">Compensar</option>
+                  <option value="COOMEVA">Coomeva</option>
+                  <option value="FAMISANAR">Famisanar</option>
+                  <option value="OTRA">Otra (Especificar en soporte)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Origen de la Incapacidad <span class="required">*</span></label>
+                <select name="origen" required>
+                  <option value="" disabled selected>Seleccionar...</option>
+                  <option value="ENFERMEDAD_COMUN">Enfermedad Común</option>
+                  <option value="ACCIDENTE_TRANSITO">Accidente de Tránsito</option>
+                  <option value="LICENCIA">Licencia de Maternidad/Paternidad</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Soporte Médico (PDF) <span class="required">*</span></label>
+                <input type="file" name="soporte_pdf" accept=".pdf" required id="archivo_pdf" />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            Enviar Registro
+          </button>
+
+          <div id="mensajeExito" class="alert alert-success">
+            ✓ ¡La información se ha enviado y registrado correctamente!
+          </div>
+          <div id="mensajeError" class="alert alert-error">
+            ✗ Ha ocurrido un error al enviar. Por favor, inténtalo de nuevo.
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <script>
+      // Validar que sea PDF y el tamaño (5MB máx por ejemplo)
+      document.getElementById('archivo_pdf').addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+              if (file.type !== "application/pdf") {
+                  alert("Solo se permiten archivos en formato PDF.");
+                  this.value = '';
+              } else if (file.size > 5 * 1024 * 1024) {
+                  alert("El archivo es demasiado grande (Máximo 5MB).");
+                  this.value = '';
+              }
+          }
+      });
+
+      document.getElementById("formularioIncapacidades").addEventListener("submit", function (e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById("btnSubmit");
+        btn.innerHTML = "Procesando envío... ⏳";
+        btn.disabled = true;
+
+        document.getElementById("mensajeError").style.display = "none";
+        document.getElementById("mensajeExito").style.display = "none";
+
+        // Generar el identificador único dinámicamente
+        const cedula = document.getElementById('cedula').value.trim();
+        // Reemplazar espacios por guiones bajos en el nombre para el ID
+        const nombre = document.getElementById('nombre_completo').value.trim().replace(/\s+/g, '_');
+        const numIncap = document.getElementById('numero_incapacidad').value.trim();
+        
+        let idUnico = `${cedula}_${nombre}`;
+        if (numIncap !== '') {
+            idUnico += `_${numIncap}`;
+        }
+        
+        // Asignarlo al campo oculto antes de empaquetar
+        document.getElementById('identificador_incapacidad').value = idUnico;
+
+        const formData = new FormData(this);
+
+        fetch("/api/enviar-incapacidad", { method: "POST", body: formData })
+          .then(async (res) => {
+            if (res.ok) {
+              document.getElementById("mensajeExito").style.display = "block";
+              btn.innerHTML = "¡Registro Enviado!";
+              this.reset();
+            } else {
+              document.getElementById("mensajeError").style.display = "block";
+              btn.innerHTML = "Reintentar Envío";
+              btn.disabled = false;
+            }
+          })
+          .catch((err) => {
+            document.getElementById("mensajeError").style.display = "block";
+            btn.innerHTML = "Reintentar Envío";
+            btn.disabled = false;
+          });
+      });
+    </script>
+  </body>
+</html>

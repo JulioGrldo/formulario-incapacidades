@@ -21,7 +21,7 @@ if (!fs.existsSync('uploads')) {
     fs.mkdirSync('uploads');
 }
 
-app.post('/enviar-incapacidad', upload.any(), async (req, res) => {
+app.post('/api/enviar-incapacidad', upload.any(), async (req, res) => {
     try {
         console.log('Recibiendo datos de incapacidad...');
 

@@ -151,7 +151,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
           
-          <h1 class="header-title">Registro de Incapacidades</h1>
+          <h1 class="header-title">Registro de transcipcion de incapacidades</h1>
           <p class="header-subtitle">
             Diligencia el formulario y adjunta el soporte médico <strong>únicamente en formato PDF</strong>.
           </p>
@@ -159,7 +159,7 @@
 
         <div class="container-padding">
           <div class="form-section">
-            <div class="section-title">1. Datos del Colaborador</div>
+            <div class="section-title">1. Datos del trabajador</div>
             <div class="two-col-grid">
               <div class="form-group">
                 <label>Número de Cédula <span class="required">*</span></label>
@@ -175,6 +175,16 @@
           <div class="form-section" style="margin-top: 30px;">
             <div class="section-title">2. Detalles de la Incapacidad</div>
             <div class="two-col-grid">
+              
+              <div class="form-group">
+                <label>Fecha de Inicio <span class="required">*</span></label>
+                <input type="date" name="fecha_inicio" id="fecha_inicio" required />
+              </div>
+              <div class="form-group">
+                <label>Fecha Fin <span class="required">*</span></label>
+                <input type="date" name="fecha_fin" id="fecha_fin" required />
+              </div>
+
               <div class="form-group">
                 <label>Número de Incapacidad</label>
                 <input type="text" id="numero_incapacidad" name="numero_incapacidad" placeholder="(Opcional)" oninput="this.value = this.value.toUpperCase()" />
@@ -182,7 +192,7 @@
               
               <div class="form-group">
                 <label>EPS <span class="required">*</span></label>
-                <select name="eps" required>
+                <select name="eps" id="eps_select" required onchange="toggleOtraEps()">
                   <option value="" disabled selected>Seleccionar...</option>
                   <option value="SURA">Sura</option>
                   <option value="SANITAS">Sanitas</option>
@@ -191,8 +201,13 @@
                   <option value="COMPENSAR">Compensar</option>
                   <option value="COOMEVA">Coomeva</option>
                   <option value="FAMISANAR">Famisanar</option>
-                  <option value="OTRA">Otra (Especificar en soporte)</option>
+                  <option value="OTRA">Otra (Especificar)</option>
                 </select>
+              </div>
+
+              <div class="form-group" id="div_otra_eps" style="display: none;">
+                <label>¿Cuál EPS? <span class="required">*</span></label>
+                <input type="text" id="otra_eps" name="otra_eps" placeholder="Escribe el nombre" oninput="this.value = this.value.toUpperCase()" />
               </div>
 
               <div class="form-group">
